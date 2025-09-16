@@ -1,0 +1,21 @@
+{
+  "zap01": {
+    "numbers": [
+      "557587090831",
+      "557587052700", 
+      "557587090596",
+      "553182384081",
+      "557588116480",
+      "557587052731",
+      "557587079665",
+      "557587089357",
+      "557587052671",
+      "557587003095"
+    ],
+    "message": "Oi Gaby, quero mulheres perto de mim!",
+    "delayMs": 2000,
+    "title": "Gaby",
+    "imageUrl": "https://e-volutionn.com/wp-content/uploads/2024/05/IMG_9038.jpg",
+    "active": true
+  }
+}
