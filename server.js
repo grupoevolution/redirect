@@ -75,7 +75,7 @@ function migrateFromJSON() {
     if (fs.existsSync(jsonPath)) {
         try {
             const jsonData = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
-            console.log('🔄 Migrando dados do JSON para SQLite...');
+            console.log('Migrando dados do JSON para SQLite...');
 
             Object.keys(jsonData).forEach(slug => {
                 const config = jsonData[slug];
@@ -96,12 +96,267 @@ function migrateFromJSON() {
                     });
             });
             
-            console.log('✅ Migração concluída!');
+            console.log('Migração concluída com sucesso!');
         } catch (error) {
-            console.log('⚠️ Erro na migração:', error.message);
+            console.log('Erro na migração:', error.message);
         }
     }
 }
+
+// CSS comum para todas as páginas
+const commonStyles = `
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: #f8fafc;
+        color: #334155;
+        line-height: 1.6;
+    }
+    
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .header {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid #e2e8f0;
+    }
+    
+    h1 {
+        color: #1e293b;
+        font-size: 28px;
+        font-weight: 600;
+    }
+    
+    h2 {
+        color: #1e293b;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px 20px;
+        background: #3b82f6;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.2s;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .btn:hover {
+        background: #2563eb;
+        transform: translateY(-1px);
+    }
+    
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 13px;
+    }
+    
+    .btn-success {
+        background: #059669;
+    }
+    
+    .btn-success:hover {
+        background: #047857;
+    }
+    
+    .btn-warning {
+        background: #d97706;
+    }
+    
+    .btn-warning:hover {
+        background: #b45309;
+    }
+    
+    .btn-danger {
+        background: #dc2626;
+    }
+    
+    .btn-danger:hover {
+        background: #b91c1c;
+    }
+    
+    .btn-secondary {
+        background: #6b7280;
+    }
+    
+    .btn-secondary:hover {
+        background: #4b5563;
+    }
+    
+    .card {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        border: 1px solid #e2e8f0;
+        margin-bottom: 24px;
+    }
+    
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+    }
+    
+    th, td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #475569;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    tr:hover {
+        background: #f8fafc;
+    }
+    
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+    
+    .badge.active {
+        background: #dcfce7;
+        color: #166534;
+    }
+    
+    .badge.inactive {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .form-group {
+        margin-bottom: 20px;
+    }
+    
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    input, textarea, select {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+    }
+    
+    input:focus, textarea:focus, select:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+    }
+    
+    textarea {
+        height: 100px;
+        resize: vertical;
+    }
+    
+    .help-text {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+    
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+    }
+    
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 16px;
+        }
+        
+        .header {
+            flex-direction: column;
+            gap: 16px;
+            text-align: center;
+        }
+        
+        .grid {
+            grid-template-columns: 1fr;
+        }
+        
+        table {
+            font-size: 14px;
+        }
+        
+        th, td {
+            padding: 8px 12px;
+        }
+    }
+    
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        border: 1px solid #e2e8f0;
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #1e293b;
+        display: block;
+    }
+    
+    .stat-label {
+        font-size: 14px;
+        color: #64748b;
+        margin-top: 4px;
+    }
+`;
 
 // Middleware de autenticação
 function requireAuth(req, res, next) {
@@ -122,79 +377,67 @@ app.get('/login', (req, res) => {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Admin</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #25D366, #128C7E);
+        ${commonStyles}
+        
+        .login-wrapper {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
+        
         .login-container {
             background: white;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 16px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
             width: 100%;
             max-width: 400px;
         }
-        h1 {
+        
+        .login-title {
             text-align: center;
-            color: #333;
-            margin-bottom: 30px;
+            color: #1e293b;
+            margin-bottom: 32px;
+            font-size: 24px;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: bold;
-        }
-        input[type="text"], input[type="password"] {
+        
+        .login-btn {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            justify-content: center;
+            padding: 14px;
             font-size: 16px;
         }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: #25D366;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background: #128C7E;
-        }
+        
         .error {
-            color: #e74c3c;
+            color: #dc2626;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 16px;
+            padding: 12px;
+            background: #fee2e2;
+            border-radius: 8px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>🔐 Admin Login</h1>
-        <form method="POST" action="/login">
-            <div class="form-group">
-                <label for="username">Login:</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Senha:</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn">Entrar</button>
-            ${req.query.error ? '<div class="error">Login ou senha incorretos!</div>' : ''}
-        </form>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <h1 class="login-title">Acesso Administrativo</h1>
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Usuário:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn login-btn">Entrar</button>
+                ${req.query.error ? '<div class="error">Usuário ou senha incorretos!</div>' : ''}
+            </form>
+        </div>
     </div>
 </body>
 </html>
@@ -207,7 +450,7 @@ app.post('/login', (req, res) => {
     
     if (username === 'iagoredirect' && password === '#Tenis8203') {
         req.session.authenticated = true;
-        res.redirect('/admin');
+        res.redirect('/admin-x7k9p2');
     } else {
         res.redirect('/login?error=1');
     }
@@ -220,7 +463,7 @@ app.get('/logout', (req, res) => {
 });
 
 // Painel admin principal
-app.get('/admin', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2', requireAuth, (req, res) => {
     // Buscar todos os links com contagem de cliques
     db.all(`
         SELECT l.*, 
@@ -237,17 +480,23 @@ app.get('/admin', requireAuth, (req, res) => {
             return res.status(500).send('Erro no banco de dados');
         }
 
+        // Calcular estatísticas
+        const totalLinks = links.length;
+        const activeLinks = links.filter(l => l.active).length;
+        const totalClicks = links.reduce((sum, l) => sum + (l.clicks_count || 0), 0);
+        const totalNumbers = links.reduce((sum, l) => sum + (l.total_numbers || 0), 0);
+
         const linksHtml = links.map(link => `
             <tr>
-                <td><strong>${link.slug}</strong></td>
-                <td>${link.message.substring(0, 50)}${link.message.length > 50 ? '...' : ''}</td>
+                <td><span style="font-weight: 500;">${link.slug}</span></td>
+                <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${link.message}</td>
                 <td><span class="badge ${link.active ? 'active' : 'inactive'}">${link.active ? 'Ativo' : 'Inativo'}</span></td>
                 <td>${link.active_numbers}/${link.total_numbers}</td>
-                <td><strong>${link.clicks_count || 0}</strong></td>
+                <td><span style="font-weight: 600;">${link.clicks_count || 0}</span></td>
                 <td>
-                    <a href="/admin/edit/${link.slug}" class="btn btn-sm">✏️ Editar</a>
-                    <a href="/admin/toggle/${link.id}" class="btn btn-sm ${link.active ? 'btn-warning' : 'btn-success'}">${link.active ? '⏸️ Pausar' : '▶️ Ativar'}</a>
-                    <a href="/admin/delete/${link.id}" class="btn btn-sm btn-danger" onclick="return confirm('Confirma exclusão?')">🗑️ Deletar</a>
+                    <a href="/admin-x7k9p2/edit/${link.slug}" class="btn btn-sm">Editar</a>
+                    <a href="/admin-x7k9p2/toggle/${link.id}" class="btn btn-sm ${link.active ? 'btn-warning' : 'btn-success'}">${link.active ? 'Pausar' : 'Ativar'}</a>
+                    <a href="/admin-x7k9p2/delete/${link.id}" class="btn btn-sm btn-danger" onclick="return confirm('Confirma a exclusão deste link?')">Deletar</a>
                 </td>
             </tr>
         `).join('');
@@ -258,77 +507,40 @@ app.get('/admin', requireAuth, (req, res) => {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - WhatsApp Redirector</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #f5f5f5; 
-            padding: 20px; 
-        }
-        .container { max-width: 1200px; margin: 0 auto; }
-        .header {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 { color: #25D366; }
-        .btn {
-            padding: 8px 16px;
-            background: #25D366;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-        }
-        .btn:hover { background: #128C7E; }
-        .btn-sm { padding: 6px 12px; font-size: 14px; }
-        .btn-success { background: #28a745; }
-        .btn-warning { background: #ffc107; color: #212529; }
-        .btn-danger { background: #dc3545; }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; font-weight: bold; }
-        .badge {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .badge.active { background: #d4edda; color: #155724; }
-        .badge.inactive { background: #f8d7da; color: #721c24; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
-        textarea { height: 100px; resize: vertical; }
-    </style>
+    <title>Painel Administrativo</title>
+    <style>${commonStyles}</style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📱 WhatsApp Redirector - Admin</h1>
+            <h1>Painel Administrativo</h1>
             <div>
-                <a href="/admin/create" class="btn">➕ Criar Link</a>
-                <a href="/logout" class="btn btn-danger">🚪 Sair</a>
+                <a href="/admin-x7k9p2/create" class="btn">Criar Novo Link</a>
+                <a href="/logout" class="btn btn-danger">Sair</a>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <span class="stat-number">${totalLinks}</span>
+                <div class="stat-label">Total de Links</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${activeLinks}</span>
+                <div class="stat-label">Links Ativos</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${totalClicks}</span>
+                <div class="stat-label">Total de Cliques</div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">${totalNumbers}</span>
+                <div class="stat-label">Números Cadastrados</div>
             </div>
         </div>
 
         <div class="card">
-            <h2>📊 Links Gerenciados</h2>
+            <h2>Links Gerenciados</h2>
             <table>
                 <thead>
                     <tr>
@@ -341,7 +553,7 @@ app.get('/admin', requireAuth, (req, res) => {
                     </tr>
                 </thead>
                 <tbody>
-                    ${linksHtml || '<tr><td colspan="6" style="text-align:center;">Nenhum link encontrado</td></tr>'}
+                    ${linksHtml || '<tr><td colspan="6" style="text-align:center; color: #6b7280; font-style: italic;">Nenhum link encontrado</td></tr>'}
                 </tbody>
             </table>
         </div>
@@ -353,35 +565,24 @@ app.get('/admin', requireAuth, (req, res) => {
 });
 
 // Criar novo link (GET)
-app.get('/admin/create', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/create', requireAuth, (req, res) => {
     res.send(`
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Link</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        h1 { color: #25D366; margin-bottom: 20px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
-        textarea { height: 120px; resize: vertical; }
-        .btn { padding: 12px 24px; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; text-decoration: none; display: inline-block; margin-right: 10px; }
-        .btn:hover { background: #128C7E; }
-        .btn-secondary { background: #6c757d; }
-        .help-text { font-size: 14px; color: #666; margin-top: 5px; }
-    </style>
+    <title>Criar Novo Link</title>
+    <style>${commonStyles}</style>
 </head>
 <body>
     <div class="container">
+        <div class="header">
+            <h1>Criar Novo Link</h1>
+        </div>
+
         <div class="card">
-            <h1>➕ Criar Novo Link</h1>
-            <form method="POST" action="/admin/create">
+            <form method="POST" action="/admin-x7k9p2/create">
                 <div class="form-group">
                     <label for="slug">Slug do Link:</label>
                     <input type="text" id="slug" name="slug" required placeholder="ex: zap02">
@@ -390,7 +591,7 @@ app.get('/admin/create', requireAuth, (req, res) => {
 
                 <div class="form-group">
                     <label for="message">Mensagem:</label>
-                    <textarea id="message" name="message" required placeholder="Oi! Estou interessado..."></textarea>
+                    <textarea id="message" name="message" required placeholder="Olá! Estou interessado em conversar..."></textarea>
                 </div>
 
                 <div class="form-group">
@@ -406,11 +607,11 @@ app.get('/admin/create', requireAuth, (req, res) => {
                 <div class="form-group">
                     <label for="numbers">Números do WhatsApp:</label>
                     <textarea id="numbers" name="numbers" required placeholder="557587090831&#10;557587052700&#10;553182384081"></textarea>
-                    <div class="help-text">Um número por linha, com DDI (55)</div>
+                    <div class="help-text">Um número por linha, incluindo DDI (55)</div>
                 </div>
 
-                <button type="submit" class="btn">💾 Salvar Link</button>
-                <a href="/admin" class="btn btn-secondary">↩️ Voltar</a>
+                <button type="submit" class="btn">Salvar Link</button>
+                <a href="/admin-x7k9p2" class="btn btn-secondary">Voltar</a>
             </form>
         </div>
     </div>
@@ -420,7 +621,7 @@ app.get('/admin/create', requireAuth, (req, res) => {
 });
 
 // Criar novo link (POST)
-app.post('/admin/create', requireAuth, (req, res) => {
+app.post('/admin-x7k9p2/create', requireAuth, (req, res) => {
     const { slug, message, title, imageUrl, numbers } = req.body;
     
     // Limpar e validar números
@@ -452,12 +653,12 @@ app.post('/admin/create', requireAuth, (req, res) => {
             });
             stmt.finalize();
 
-            res.redirect('/admin');
+            res.redirect('/admin-x7k9p2');
         });
 });
 
 // Editar link
-app.get('/admin/edit/:slug', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/edit/:slug', requireAuth, (req, res) => {
     const slug = req.params.slug;
 
     // Buscar link e números
@@ -473,11 +674,11 @@ app.get('/admin/edit/:slug', requireAuth, (req, res) => {
 
             const numbersHtml = numbers.map(num => `
                 <tr>
-                    <td>${num.number}</td>
+                    <td style="font-family: monospace;">${num.number}</td>
                     <td><span class="badge ${num.active ? 'active' : 'inactive'}">${num.active ? 'Ativo' : 'Inativo'}</span></td>
                     <td>
-                        <a href="/admin/toggle-number/${num.id}" class="btn btn-sm ${num.active ? 'btn-warning' : 'btn-success'}">${num.active ? 'Desativar' : 'Ativar'}</a>
-                        <a href="/admin/delete-number/${num.id}" class="btn btn-sm btn-danger" onclick="return confirm('Deletar número?')">🗑️</a>
+                        <a href="/admin-x7k9p2/toggle-number/${num.id}" class="btn btn-sm ${num.active ? 'btn-warning' : 'btn-success'}">${num.active ? 'Desativar' : 'Ativar'}</a>
+                        <a href="/admin-x7k9p2/delete-number/${num.id}" class="btn btn-sm btn-danger" onclick="return confirm('Deletar este número?')">Deletar</a>
                     </td>
                 </tr>
             `).join('');
@@ -489,41 +690,18 @@ app.get('/admin/edit/:slug', requireAuth, (req, res) => {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Link - ${slug}</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-        .container { max-width: 1000px; margin: 0 auto; }
-        .card { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
-        h1, h2 { color: #25D366; margin-bottom: 20px; }
-        .form-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
-        input, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
-        textarea { height: 100px; resize: vertical; }
-        .btn { padding: 10px 20px; background: #25D366; color: white; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; margin-right: 10px; margin-bottom: 10px; }
-        .btn:hover { background: #128C7E; }
-        .btn-sm { padding: 6px 12px; font-size: 14px; }
-        .btn-secondary { background: #6c757d; }
-        .btn-success { background: #28a745; }
-        .btn-warning { background: #ffc107; color: #212529; }
-        .btn-danger { background: #dc3545; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f8f9fa; font-weight: bold; }
-        .badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
-        .badge.active { background: #d4edda; color: #155724; }
-        .badge.inactive { background: #f8d7da; color: #721c24; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
-    </style>
+    <style>${commonStyles}</style>
 </head>
 <body>
     <div class="container">
-        <h1>✏️ Editar Link: ${slug}</h1>
+        <div class="header">
+            <h1>Editar Link: ${slug}</h1>
+        </div>
         
         <div class="grid">
             <div class="card">
-                <h2>📝 Informações do Link</h2>
-                <form method="POST" action="/admin/update/${link.id}">
+                <h2>Informações do Link</h2>
+                <form method="POST" action="/admin-x7k9p2/update/${link.id}">
                     <div class="form-group">
                         <label for="message">Mensagem:</label>
                         <textarea id="message" name="message" required>${link.message}</textarea>
@@ -536,24 +714,25 @@ app.get('/admin/edit/:slug', requireAuth, (req, res) => {
                         <label for="imageUrl">URL da Imagem:</label>
                         <input type="url" id="imageUrl" name="imageUrl" required value="${link.imageUrl}">
                     </div>
-                    <button type="submit" class="btn">💾 Salvar Alterações</button>
+                    <button type="submit" class="btn">Salvar Alterações</button>
                 </form>
             </div>
 
             <div class="card">
-                <h2>📱 Adicionar Número</h2>
-                <form method="POST" action="/admin/add-number/${link.id}">
+                <h2>Adicionar Número</h2>
+                <form method="POST" action="/admin-x7k9p2/add-number/${link.id}">
                     <div class="form-group">
                         <label for="number">Número do WhatsApp:</label>
                         <input type="text" id="number" name="number" required placeholder="557587090831">
+                        <div class="help-text">Incluir DDI do país (55 para Brasil)</div>
                     </div>
-                    <button type="submit" class="btn">➕ Adicionar</button>
+                    <button type="submit" class="btn">Adicionar Número</button>
                 </form>
             </div>
         </div>
 
         <div class="card">
-            <h2>📱 Números do Link (${numbers.length})</h2>
+            <h2>Números do Link (${numbers.length})</h2>
             <table>
                 <thead>
                     <tr>
@@ -563,14 +742,14 @@ app.get('/admin/edit/:slug', requireAuth, (req, res) => {
                     </tr>
                 </thead>
                 <tbody>
-                    ${numbersHtml || '<tr><td colspan="3" style="text-align:center;">Nenhum número encontrado</td></tr>'}
+                    ${numbersHtml || '<tr><td colspan="3" style="text-align:center; color: #6b7280; font-style: italic;">Nenhum número encontrado</td></tr>'}
                 </tbody>
             </table>
         </div>
 
         <div class="card">
-            <a href="/admin" class="btn btn-secondary">↩️ Voltar ao Admin</a>
-            <a href="/${slug}" class="btn" target="_blank">🔗 Testar Link</a>
+            <a href="/admin-x7k9p2" class="btn btn-secondary">Voltar ao Painel</a>
+            <a href="/${slug}" class="btn" target="_blank">Testar Link</a>
         </div>
     </div>
 </body>
@@ -581,7 +760,7 @@ app.get('/admin/edit/:slug', requireAuth, (req, res) => {
 });
 
 // Atualizar informações do link
-app.post('/admin/update/:id', requireAuth, (req, res) => {
+app.post('/admin-x7k9p2/update/:id', requireAuth, (req, res) => {
     const { id } = req.params;
     const { message, title, imageUrl } = req.body;
 
@@ -591,12 +770,12 @@ app.post('/admin/update/:id', requireAuth, (req, res) => {
             if (err) {
                 return res.status(500).send('Erro ao atualizar link');
             }
-            res.redirect('/admin');
+            res.redirect('/admin-x7k9p2');
         });
 });
 
 // Adicionar número ao link
-app.post('/admin/add-number/:linkId', requireAuth, (req, res) => {
+app.post('/admin-x7k9p2/add-number/:linkId', requireAuth, (req, res) => {
     const { linkId } = req.params;
     const { number } = req.body;
 
@@ -613,26 +792,26 @@ app.post('/admin/add-number/:linkId', requireAuth, (req, res) => {
 
                 // Redirecionar de volta para edição
                 db.get(`SELECT slug FROM links WHERE id = ?`, [linkId], (err, link) => {
-                    res.redirect(`/admin/edit/${link.slug}`);
+                    res.redirect(`/admin-x7k9p2/edit/${link.slug}`);
                 });
             });
     });
 });
 
 // Toggle ativo/inativo do link
-app.get('/admin/toggle/:id', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/toggle/:id', requireAuth, (req, res) => {
     const { id } = req.params;
 
     db.run(`UPDATE links SET active = 1 - active WHERE id = ?`, [id], (err) => {
         if (err) {
             return res.status(500).send('Erro ao alterar status');
         }
-        res.redirect('/admin');
+        res.redirect('/admin-x7k9p2');
     });
 });
 
 // Toggle ativo/inativo do número
-app.get('/admin/toggle-number/:id', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/toggle-number/:id', requireAuth, (req, res) => {
     const { id } = req.params;
 
     db.run(`UPDATE numbers SET active = 1 - active WHERE id = ?`, [id], (err) => {
@@ -642,13 +821,13 @@ app.get('/admin/toggle-number/:id', requireAuth, (req, res) => {
 
         // Redirecionar de volta para edição
         db.get(`SELECT l.slug FROM numbers n JOIN links l ON n.link_id = l.id WHERE n.id = ?`, [id], (err, result) => {
-            res.redirect(`/admin/edit/${result.slug}`);
+            res.redirect(`/admin-x7k9p2/edit/${result.slug}`);
         });
     });
 });
 
 // Deletar link
-app.get('/admin/delete/:id', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/delete/:id', requireAuth, (req, res) => {
     const { id } = req.params;
 
     db.serialize(() => {
@@ -659,13 +838,13 @@ app.get('/admin/delete/:id', requireAuth, (req, res) => {
             if (err) {
                 return res.status(500).send('Erro ao deletar link');
             }
-            res.redirect('/admin');
+            res.redirect('/admin-x7k9p2');
         });
     });
 });
 
 // Deletar número
-app.get('/admin/delete-number/:id', requireAuth, (req, res) => {
+app.get('/admin-x7k9p2/delete-number/:id', requireAuth, (req, res) => {
     const { id } = req.params;
 
     // Buscar slug antes de deletar
@@ -678,7 +857,7 @@ app.get('/admin/delete-number/:id', requireAuth, (req, res) => {
             if (err) {
                 return res.status(500).send('Erro ao deletar número');
             }
-            res.redirect(`/admin/edit/${result.slug}`);
+            res.redirect(`/admin-x7k9p2/edit/${result.slug}`);
         });
     });
 });
@@ -728,7 +907,7 @@ app.get('/:slug', (req, res) => {
                 db.run(`INSERT INTO clicks (slug, selected_number) VALUES (?, ?)`, 
                     [slug, selectedNumber]);
 
-                console.log(`🎯 ${slug} -> ${selectedNumber} (${currentPosition + 1}/${numbers.length})`);
+                console.log(`${slug} -> ${selectedNumber} (${currentPosition + 1}/${numbers.length})`);
 
                 // Construir URL do WhatsApp
                 const message = encodeURIComponent(link.message);
@@ -749,8 +928,8 @@ app.get('/:slug', (req, res) => {
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #25D366, #128C7E);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -760,23 +939,24 @@ app.get('/:slug', (req, res) => {
 
         .container {
             background: white;
-            padding: 30px 20px;
+            padding: 40px 30px;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
             text-align: center;
             width: 100%;
-            max-width: 320px;
+            max-width: 380px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .profile-photo {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            margin: 0 auto 15px;
+            margin: 0 auto 20px;
             overflow: hidden;
-            border: 3px solid #25D366;
-            animation: pulse 1.5s infinite;
-            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+            border: 4px solid #667eea;
+            animation: pulse 2s infinite;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
         }
 
         .profile-photo img {
@@ -786,47 +966,48 @@ app.get('/:slug', (req, res) => {
         }
 
         .profile-name {
-            font-size: 22px;
-            font-weight: 700;
-            color: #25D366;
-            margin-bottom: 12px;
+            font-size: 28px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 16px;
+            letter-spacing: -0.025em;
         }
 
         h1 {
-            color: #333;
-            margin-bottom: 10px;
+            color: #475569;
+            margin-bottom: 12px;
             font-size: 18px;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .loading {
-            color: #25D366;
-            font-size: 14px;
+            color: #667eea;
+            font-size: 16px;
             font-weight: 500;
         }
 
         .spinner {
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #25D366;
+            border: 3px solid #e2e8f0;
+            border-top: 3px solid #667eea;
             border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
             animation: spin 1s linear infinite;
-            margin: 10px auto;
+            margin: 16px auto;
         }
 
         @keyframes pulse {
             0% { 
                 transform: scale(1); 
-                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); 
+                box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3); 
             }
             50% { 
                 transform: scale(1.05); 
-                box-shadow: 0 8px 25px rgba(37, 211, 102, 0.6); 
+                box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4); 
             }
             100% { 
                 transform: scale(1); 
-                box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4); 
+                box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3); 
             }
         }
 
@@ -835,18 +1016,19 @@ app.get('/:slug', (req, res) => {
             100% { transform: rotate(360deg); }
         }
 
-        @media (max-width: 360px) {
+        @media (max-width: 480px) {
             .container {
-                padding: 25px 15px;
+                padding: 32px 24px;
+                margin: 16px;
             }
             
             .profile-photo {
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
             }
             
             .profile-name {
-                font-size: 20px;
+                font-size: 24px;
             }
             
             h1 {
@@ -884,19 +1066,19 @@ app.get('/:slug', (req, res) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor rodando na porta ${PORT}`);
-    console.log(`🔐 Admin: http://localhost:${PORT}/admin`);
-    console.log(`📊 Health: http://localhost:${PORT}/healthz`);
+    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Admin: http://localhost:${PORT}/admin-x7k9p2`);
+    console.log(`Health: http://localhost:${PORT}/healthz`);
 });
 
 // Fechar banco graciosamente
 process.on('SIGINT', () => {
-    console.log('🛑 Fechando servidor...');
+    console.log('Fechando servidor...');
     db.close((err) => {
         if (err) {
             console.error(err.message);
         }
-        console.log('📦 Banco de dados fechado.');
+        console.log('Banco de dados fechado.');
         process.exit(0);
     });
 });
